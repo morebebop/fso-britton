@@ -1,8 +1,28 @@
 import { useState } from 'react'
 
 const Statistics = (props) => {
+  const g = {
+    text: props.text[0],
+    value: props.value[0]
+  }  
+  const n = {
+    text: props.text[1],
+    value: props.value[1]
+  }  
+  const b = {
+    text: props.text[2],
+    value: props.value[2]
+  }
+  
   return (
-    <p>{props.feedback} {props.amount}</p>
+    <div>
+      <h1>statistics</h1>
+      <p>{g.text} {g.value}</p>
+      <p>{n.text} {n.value}</p>
+      <p>{b.text} {b.value}</p>
+      <p> average {((g.value * 1) + (n.value * 0) +( b.value * -1))/(g.value + n.value + b.value)} </p>
+      <p>positive percentage {(g.value / (g.value + n.value + b.value))*100}</p>
+    </div>
   )
 }
 
@@ -19,12 +39,8 @@ const App = () => {
         <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
         <button onClick={() => setBad(bad + 1)}>bad</button>
 
-      <h1>statistics</h1>
-      <Statistics feedback='good' amount={good}/>
-      <Statistics feedback='neutral' amount={neutral}/>
-      <Statistics feedback='bad' amount={bad}/>
-      <Statistics feedback='average' amount={((good * 1) + (neutral * 0) +( bad * -1))/(good + neutral + bad)} />
-      <Statistics feedback='average' amount={(good / (good + neutral + bad))*100} />
+      <Statistics text={['good', 'neutral', 'bad']} value= {[good, neutral, bad]} />
+      
     </div>
   )
 }
