@@ -13,6 +13,15 @@ const Statistics = (props) => {
     text: props.text[2],
     value: props.value[2]
   }
+
+  if (g.value === 0 && n.value === 0 && b.value === 0) {
+    return (
+      <div>
+        <h1>statistics </h1>
+        <p>No feedback given</p>
+      </div>
+    )
+  }
   
   return (
     <div>
@@ -40,7 +49,7 @@ const App = () => {
         <button onClick={() => setBad(bad + 1)}>bad</button>
 
       <Statistics text={['good', 'neutral', 'bad']} value= {[good, neutral, bad]} />
-      
+
     </div>
   )
 }
