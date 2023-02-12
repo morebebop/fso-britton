@@ -8,7 +8,10 @@ const Button = (props) => {
 
 const StatisticsLine = (props) => {
   return (
-    <p>{props.text} {props.value}</p>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   )
 }
 
@@ -35,11 +38,15 @@ const Statistics = (props) => {
   }
   return (
     <div>
-      <StatisticsLine text='good' value={g.value}/>
-      <StatisticsLine text='neutral' value={n.value}/>
-      <StatisticsLine text='bad' value={b.value}/>
-      <StatisticsLine text='average' value={((g.value * 1) + (n.value * 0) +( b.value * -1))/(g.value + n.value + b.value)}/>
-      <StatisticsLine text='positive percentage' value={(g.value / (g.value + n.value + b.value))*100}/>
+      <table>
+        <tbody>
+        <StatisticsLine text='good' value={g.value}/>
+        <StatisticsLine text='neutral' value={n.value}/>
+        <StatisticsLine text='bad' value={b.value}/>
+        <StatisticsLine text='average' value={(((g.value * 1) + (n.value * 0) +( b.value * -1))/(g.value + n.value + b.value)).toFixed(2)}/>
+        <StatisticsLine text='positive' value={((g.value / (g.value + n.value + b.value))*100).toFixed(1) + '%'} />
+        </tbody>
+      </table>
     </div>
   )
 }
