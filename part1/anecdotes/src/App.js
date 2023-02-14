@@ -1,3 +1,4 @@
+// imports state to be used later in the App component
 import { useState } from 'react'
 
 const App = () => {
@@ -11,21 +12,26 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+  // adds state to App component. 
+  // 'selected' is used to choose which anecdote is selected. 
   const [selected, setSelected] = useState(0)
+  // 'points' is used to vote and keep track of votes for each anecdote. 
   const [points, setPoints] = useState(new Uint8Array(anecdotes.length))
 
+  // this function creates adds one vote per click to the current selected anecdote. each vote value is stored in the points array to the index that corresponds to the selected anecdote.
   const handleVoteClick = () => {
     const copy = [...points]
     copy[selected] += 1
     setPoints(copy)
   }
 
+  // this function sets the selected index for the anecdotes array by assigning a random number (between 0 and the maximum number of elements in the anecdotes array) to the selected value. 
   const handleAnecdoteClick = () => {
     const num = Math.round(Math.random() * ((anecdotes.length - 1) - 0) + 0)
     setSelected(num)
   }
 
+  // renders the main body of the app.
   return (
     <div>
       <h1>Anecdote of the day</h1>
@@ -34,6 +40,7 @@ const App = () => {
       <button onClick={handleVoteClick}>vote</button>
       <button onClick={handleAnecdoteClick}>next anecdote</button>
       <h1>Anecdote with most votes</h1>
+      {/* this finds the index of the highest vote value in the points array and uses it as the index for the anecdotes array*/}
       {anecdotes[points.indexOf(Math.max(...points))]}
     </div>
   )
