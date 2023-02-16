@@ -1,3 +1,29 @@
+const Header = ({course}) => {
+  return (
+    <div>
+      <h1>{course}</h1>
+    </div>
+  )
+}
+
+const Content =({parts}) => {
+  return (
+    <div>
+      {parts.map(part => <p key={part.id}>{part.name} {part.exercises}</p>)}
+    </div>
+  )
+
+}
+
+const Course = ({course}) => {
+  return (
+    <div>
+        <Header course={course.name} />
+        <Content parts={course.parts}/>
+    </div>
+  )
+}
+
 const App = () => {
   const course = {
     id: 1,
@@ -21,7 +47,9 @@ const App = () => {
     ]
   }
 
-  return <Course course={course} />
+  return (
+    <Course course={course} />
+  )
 }
 
 export default App
