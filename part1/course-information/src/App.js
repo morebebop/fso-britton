@@ -6,10 +6,14 @@ const Header = ({course}) => {
   )
 }
 
+// the Content component uses the map function to create a return a p element with 
+// name and exercise for each course part
 const Content =({parts}) => {
+  const total = parts.reduce((sum, part) => sum + part.exercises, 0)
   return (
     <div>
       {parts.map(part => <p key={part.id}>{part.name} {part.exercises}</p>)}
+      <p><b>total of {total} exercises</b></p>
     </div>
   )
 
