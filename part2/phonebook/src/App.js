@@ -10,6 +10,15 @@ const App = () => {
   const addName = (event) => {
     // prevents the form from refreshing the page after submission
     event.preventDefault()
+
+    // checks if name entered into field is already in phonebook object. DOES NOT check for
+    // alternative capitalization. 'Harry Potter' !== 'harry potter' (true)
+    if (persons.some(name => name.name === newName)) {
+      setNewName('')
+      return (
+        alert(`${newName} is already added to phonebook`)
+      )
+    }
     // call setPersons to create a new array with a copy of the old persons array and the newName
     // entered in the phonebook as the last object in the array.
     setPersons(
