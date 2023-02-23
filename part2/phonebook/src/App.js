@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Person from './components/Persons'
 
 const App = () => {
   // persons state hook holds the array for a persons name and number
@@ -81,24 +84,21 @@ const App = () => {
     return (
       <div>
       <h2>Phonebook</h2>
-      filter shown with <input value={search.search} onChange={handleSearchChange} type='search'/>
+      {/* filter shown with <input value={search.search} onChange={handleSearchChange} type='search'/> */}
+      <Filter 
+        search={search} 
+        handleSearchChange={handleSearchChange}
+      />
       <h2>add a New</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: 
-          <input value={newName} onChange={handleNameChange} />
-          <br />
-          number: 
-          <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+        addName={addName} 
+        newName={newName} 
+        newNumber={newNumber} 
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange} 
+      />
       <h2>Numbers</h2>
-      {/* if the search field is empty, then the persons array is display. Otherwise, the search results are displayed */}
-      {search.search === '' ? persons.map(person => <p key={person.name}>{person.name} {person.number}</p>) 
-                            : search.list.map(s => <p key={s.name}>{s.name} {s.number}</p>)}
+      <Person persons={persons} search={search}/>
     </div>
   )
 }
