@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import Person from './components/Persons'
-import axios from 'axios'
+import PersonsList from './components/PersonsList'
+import personService from './services/persons'
 
 const App = () => {
   // persons state hook holds the array for a persons name and number
@@ -18,11 +18,10 @@ const App = () => {
   })
 
   useEffect(() => {
-    // console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    // gets the base url and sets the persons object to the response from the database
+    personService
+      .getAll()
       .then(response => {
-        // console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
@@ -48,9 +47,9 @@ const App = () => {
         )
     }
 
-    // adds the person object to the persons database with a post call
-    axios
-      .post('http://localhost:3001/persons', personObject)
+    // adds the new person object to the persons object
+    personService
+      .create(personObject)
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName('')
@@ -108,7 +107,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
       />
       <h2>Numbers</h2>
-      <Person persons={persons} search={search}/>
+      <PersonsList persons={persons} search={search}/>
     </div>
   )
 }

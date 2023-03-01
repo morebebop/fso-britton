@@ -1,5 +1,5 @@
 import Filter from './Filter'
-const Persons = ({persons, search}) => {
+const PersonsList = ({persons, search}) => {
     return (
         <div>
             {/* if the search field is empty, then the persons array is display. Otherwise, the search results are displayed */}
@@ -9,4 +9,4 @@ const Persons = ({persons, search}) => {
     )
 }
 
-export default Persons
+export default PersonsList
