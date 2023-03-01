@@ -18,11 +18,11 @@ const App = () => {
   })
 
   useEffect(() => {
-    console.log('effect')
+    // console.log('effect')
     axios
       .get('http://localhost:3001/persons')
       .then(response => {
-        console.log('promise fulfilled')
+        // console.log('promise fulfilled')
         setPersons(response.data)
       })
   }, [])
@@ -32,6 +32,12 @@ const App = () => {
     // prevents the form from refreshing the page after submission
     event.preventDefault()
     
+    // assigns both the name and number to a sign person object
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+
     // checks if name entered into field is already in phonebook object. DOES NOT check for
     // alternative capitalization. 'Harry Potter' !== 'harry potter' (true)
     if (persons.some(name => name.name === newName)) {
@@ -40,24 +46,22 @@ const App = () => {
       return (
         alert(`${newName} is already added to phonebook`)
         )
-      }
-      // call setPersons to create a new array with a copy of the old persons array and the name/number
-      // entered in the phonebook as the last object in the array.
-      setPersons(
-        [
-          ...persons,
-          {key: newName, name: newName, number: newNumber}
-        ]
-        )
-        // returns the input fields to empty after form submission
+    }
+
+    // adds the person object to the persons database with a post call
+    axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
-      }
+      })
+  }
       
-      // event handler for name field. updates newName to whatever has been typed
-      const handleNameChange = (event) => {
-        setNewName(event.target.value)
-    }
+  // event handler for name field. updates newName to whatever has been typed
+  const handleNameChange = (event) => {
+    setNewName(event.target.value)
+  }
 
     // event handler for number field. updates newNumber to whatever has been typed
     const handleNumberChange = (event) => {
