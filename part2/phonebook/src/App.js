@@ -1,9 +1,12 @@
+// import states
 import { useState, useEffect } from 'react'
+// import components
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonsList from './components/PersonsList'
-import personService from './services/persons'
 import Notification from './components/Notification'
+import personService from './services/persons'
+// import styles
 import './index.css'
 
 const App = () => {
@@ -18,7 +21,10 @@ const App = () => {
     search: '',
     results: []
   })
+  // notification state and notificationType states are used to pass a message and message styling respectively to
+  // the Notification component
   const [notification, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState('')
 
   // function to reset both the name and number fields
   const resetFields = () => {
@@ -26,6 +32,7 @@ const App = () => {
     setNewNumber('')
   }
 
+  // READ
   useEffect(() => {
     // gets the base url and sets the persons object to the response from the database
     personService
@@ -53,6 +60,8 @@ const App = () => {
       const nameDuplicate = persons.find(name => name.name === newName)
       // confirm that user would like to update person
       if (window.confirm(`${newName} is already added to the phonebook, replace the older number with a new one?`)) {
+        
+        // UPDATE
         return (
           personService
             .update(nameDuplicate.id, personObject)
@@ -60,6 +69,21 @@ const App = () => {
               // updating the state to reflect the .update
               setPersons(persons.map(person => person.id !== nameDuplicate.id ? person : response.data))
               resetFields()
+              setNotification(
+                `Updated ${personObject.name}`
+              )
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
+            })
+            .catch(error => {
+              setNotification(
+                `${personObject.name}'s information has already been removed from the server`
+              )
+              setNotificationType('error')
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
             })
         )
       }
@@ -68,6 +92,7 @@ const App = () => {
       )
     }
 
+    // CREATE
     // adds the new person object to the persons object
     return (
       personService
@@ -78,6 +103,7 @@ const App = () => {
           setNotification(
             `Added ${personObject.name}`
           )
+          setNotificationType('addedNotification')
           setTimeout(() => {
             setNotification(null)
           }, 5000)
@@ -120,6 +146,7 @@ const App = () => {
     )
   }
 
+  // DELETE
   // deletes specific names on button click
   const removeName = (id) => {
     // handles deletion request
@@ -142,7 +169,7 @@ const App = () => {
   return (
     <div>
     <h2>Phonebook</h2>
-    <Notification message={notification} />
+    <Notification message={notification} type={notificationType}/>
     {/* filter shown with <input value={search.search} onChange={handleSearchChange} type='search'/> */}
     <Filter 
       search={search} 
