@@ -3,6 +3,8 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonsList from './components/PersonsList'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
   // persons state hook holds the array for a persons name and number
@@ -16,6 +18,8 @@ const App = () => {
     search: '',
     results: []
   })
+  const [notification, setNotification] = useState(null)
+
   // function to reset both the name and number fields
   const resetFields = () => {
     setNewName('')
@@ -71,6 +75,12 @@ const App = () => {
         .then(response => {
           setPersons(persons.concat(response.data))
           resetFields()
+          setNotification(
+            `Added ${personObject.name}`
+          )
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
     )
   }
@@ -132,6 +142,7 @@ const App = () => {
   return (
     <div>
     <h2>Phonebook</h2>
+    <Notification message={notification} />
     {/* filter shown with <input value={search.search} onChange={handleSearchChange} type='search'/> */}
     <Filter 
       search={search} 
