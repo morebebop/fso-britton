@@ -16,6 +16,11 @@ const App = () => {
     search: '',
     results: []
   })
+  // function to reset both the name and number fields
+  const resetFields = () => {
+    setNewName('')
+    setNewNumber('')
+  }
 
   useEffect(() => {
     // gets the base url and sets the persons object to the response from the database
@@ -40,21 +45,34 @@ const App = () => {
     // checks if name entered into field is already in phonebook object. DOES NOT check for
     // alternative capitalization. 'Harry Potter' !== 'harry potter' (true)
     if (persons.some(name => name.name === newName)) {
-      setNewName('')
-      setNewNumber('')
-      return (
-        alert(`${newName} is already added to phonebook`)
+      // find the person object to update
+      const nameDuplicate = persons.find(name => name.name === newName)
+      // confirm that user would like to update person
+      if (window.confirm(`${newName} is already added to the phonebook, replace the older number with a new one?`)) {
+        return (
+          personService
+            .update(nameDuplicate.id, personObject)
+            .then(response => {
+              // updating the state to reflect the .update
+              setPersons(persons.map(person => person.id !== nameDuplicate.id ? person : response.data))
+              resetFields()
+            })
         )
+      }
+      return (
+        resetFields()
+      )
     }
 
     // adds the new person object to the persons object
-    personService
-      .create(personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
+    return (
+      personService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          resetFields()
+        })
+    )
   }
       
   // event handler for name field. updates newName to whatever has been typed
@@ -84,10 +102,12 @@ const App = () => {
         person.name.toLowerCase().includes(event.target.value.toLowerCase())
       )
     })
-    setSearch ({
-      search: event.target.value,
-      list: results
-    })
+    return (
+      setSearch ({
+        search: event.target.value,
+        list: results
+      })
+    )
   }
 
   // deletes specific names on button click
