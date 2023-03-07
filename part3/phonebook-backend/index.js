@@ -2,8 +2,11 @@
 const express = require('express')
 const app = express()
 
+// JSON Parser - this will allow the JSON request in the POST route to be parser and selected
+app.use(express.json())
+
 // hardcoded persons database. will separate out to actual db after lesson
-const persons = [
+let persons = [
     { 
     "id": 1,
     "name": "Arto Hellas", 
@@ -25,6 +28,26 @@ const persons = [
     "number": "39-23-6423122"
     }
 ]
+
+
+// CREATE
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    // catches any post requests that are missing either name or number. will revist this next commit to update
+    // error handling response
+    if (!body.name || !body.number) {
+        response.statusMessage = 'name must be unique'
+        return response.status(400).end()
+    }
+    const person = {
+        // assign id a random int between 0 and 10000
+        id: Math.random() * (10000),
+        name: body.name,
+        number: body.number,
+    }
+    persons = persons.concat(person)
+    response.json(person)
+})
 
 // READ
 app.get('/api/persons', (request, response) => {
@@ -52,6 +75,13 @@ app.get('/info', (request, response) => {
         <br/>
         ${Date()}`
     )
+})
+
+// DELETE
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+    persons = persons.filter(person => person.id !== id)
+    return response.status(204).end()
 })
 
 const PORT = 3001
