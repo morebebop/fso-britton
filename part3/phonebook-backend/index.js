@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 
+// hardcoded persons database. will separate out to actual db after lesson
 const persons = [
     { 
     "id": 1,
@@ -28,6 +29,21 @@ const persons = [
 // READ
 app.get('/api/persons', (request, response) => {
     response.json(persons)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+    // assign id const the value of the id string passed in request. converting it from a string to
+    // a number so that it can be compared to person.id whi
+    const id = Number(request.params.id)
+    // finding the person wtih an id that matches the id in the request
+    const person = persons.find(person => person.id === id)
+    // checks that a person with a matching request id exists. if so, respond with the persons info
+    if (person) {
+        return response.json(person)
+    // otherwise, throw a 404 error and stop the application
+    } else {
+        return response.status(404).end()
+    }
 })
 
 app.get('/info', (request, response) => {
