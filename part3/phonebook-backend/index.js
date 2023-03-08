@@ -1,5 +1,7 @@
-// import express
-const express = require('express')
+// imports
+var express = require('express')
+var morgan = require('morgan')
+
 const app = express()
 
 // JSON Parser - this will allow the JSON request in the POST route to be parser and selected
@@ -8,27 +10,49 @@ app.use(express.json())
 // hardcoded persons database. will separate out to actual db after lesson
 let persons = [
     { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
+        "id": 1,
+        "name": "Arto Hellas", 
+        "number": "040-123456"
     },
     { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
+        "id": 2,
+        "name": "Ada Lovelace", 
+        "number": "39-44-5323523"
     },
     { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
+        "id": 3,
+        "name": "Dan Abramov", 
+        "number": "12-43-234345"
     },
     { 
-    "id": 4,
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
+        "id": 4,
+        "name": "Mary Poppendieck", 
+        "number": "39-23-6423122"
     }
 ]
 
+// Middleware - Request Logger
+app.use(morgan((tokens, request, response) => {
+    // if a POST is submitted, then the content of the request will also be logged
+    if (tokens.method(request, response) === 'POST') {
+        return [
+            tokens.method(request, response),
+            tokens.url(request, response),
+            tokens.status(request, response),
+            tokens.res(request, response, 'content-length'), '-',
+            tokens['response-time'](request, response), 'ms',
+            JSON.stringify(request.body)
+        ].join(' ')
+    } else {
+        return [
+            tokens.method(request, response),
+            tokens.url(request, response),
+            tokens.status(request, response),
+            tokens.res(request, response, 'content-length'), '-',
+            tokens['response-time'](request, response), 'ms',
+        ].join(' ')
+    }
+}))
 
 // CREATE
 app.post('/api/persons', (request, response) => {
