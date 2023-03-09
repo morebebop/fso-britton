@@ -1,11 +1,14 @@
 // imports
 var express = require('express')
 var morgan = require('morgan')
+const cors = require('cors')
 
 const app = express()
 
 // JSON Parser - this will allow the JSON request in the POST route to be parser and selected
 app.use(express.json())
+// using cors() to allow the frontend (port 3000) to connect to the backend (port 3001)
+app.use(cors())
 
 // hardcoded persons database. will separate out to actual db after lesson
 let persons = [
