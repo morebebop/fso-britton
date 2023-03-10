@@ -36,8 +36,8 @@ const App = () => {
   useEffect(() => {
     // gets the base url and sets the persons object to the response from the database
     personService
-      .getAll()
-      .then(response => {
+    .getAll()
+    .then(response => {
         setPersons(response.data)
       })
   }, [])

@@ -1,9 +1,13 @@
 // imports
-var express = require('express')
-var morgan = require('morgan')
-const cors = require('cors')
-
+const express = require('express')
 const app = express()
+const cors = require('cors')
+require('dotenv').config()
+
+const Person = require('./models/person')
+
+var morgan = require('morgan')
+
 
 // JSON Parser - this will allow the JSON request in the POST route to be parser and selected
 app.use(express.json())
@@ -12,29 +16,6 @@ app.use(express.static('build'))
 // using cors() to allow the frontend (port 3000) to connect to the backend (port 3001)
 app.use(cors())
 
-// hardcoded persons database. will separate out to actual db after lesson
-let persons = [
-    { 
-        "id": 1,
-        "name": "Arto Hellas", 
-        "number": "040-123456"
-    },
-    { 
-        "id": 2,
-        "name": "Ada Lovelace", 
-        "number": "39-44-5323523"
-    },
-    { 
-        "id": 3,
-        "name": "Dan Abramov", 
-        "number": "12-43-234345"
-    },
-    { 
-        "id": 4,
-        "name": "Mary Poppendieck", 
-        "number": "39-23-6423122"
-    }
-]
 
 // Middleware - Request Logger
 app.use(morgan((tokens, request, response) => {
@@ -64,38 +45,33 @@ app.post('/api/persons', (request, response) => {
     const body = request.body
     // catches any post requests that are missing either name or number. will revist this next commit to update
     // error handling response
-    if (!body.name || !body.number) {
-        response.statusMessage = 'name must be unique'
+    if (body.name === undefined || body.number === undefined) {
+        response.statusMessage = 'content missing'
         return response.status(400).end()
     }
-    const person = {
+    const person = new Person({
         // assign id a random int between 0 and 10000
         id: Math.random() * (10000),
         name: body.name,
         number: body.number,
-    }
-    persons = persons.concat(person)
-    response.json(person)
+    })
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 // READ
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    // looping through all objects in Person, then sending back the json for them
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    // assign id const the value of the id string passed in request. converting it from a string to
-    // a number so that it can be compared to person.id whi
-    const id = Number(request.params.id)
-    // finding the person wtih an id that matches the id in the request
-    const person = persons.find(person => person.id === id)
-    // checks that a person with a matching request id exists. if so, respond with the persons info
-    if (person) {
-        return response.json(person)
-    // otherwise, throw a 404 error and stop the application
-    } else {
-        return response.status(404).end()
-    }
+    Person.findById(request.params.id).then(person => {
+        response.json(person)
+    })
 })
 
 app.get('/info', (request, response) => {
@@ -113,7 +89,7 @@ app.delete('/api/persons/:id', (request, response) => {
     return response.status(204).end()
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

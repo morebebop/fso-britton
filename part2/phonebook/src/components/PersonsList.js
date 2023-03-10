@@ -1,4 +1,3 @@
-import Filter from './Filter'
 const PersonsList = ({persons, search, removeName}) => {
     return (
         <div>

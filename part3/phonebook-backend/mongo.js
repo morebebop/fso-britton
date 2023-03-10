@@ -6,8 +6,6 @@ if (process.argv.length < 3) {
     process.exit(1)
 }
 
-// assign password the value of the 3rd argument
-const password = process.argv[2]
 // uses the password variable to complete url for database
 const url = `mongodb+srv://brittonjwright:${password}@cluster0.v9vub56.mongodb.net/phonbookApp?retryWrites=true&w=majority`
 
