@@ -7,6 +7,8 @@ const app = express()
 
 // JSON Parser - this will allow the JSON request in the POST route to be parser and selected
 app.use(express.json())
+// makes express check for build directory first when receiving GET requests
+app.use(express.static('build'))
 // using cors() to allow the frontend (port 3000) to connect to the backend (port 3001)
 app.use(cors())
 

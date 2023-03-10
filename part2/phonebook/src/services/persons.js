@@ -1,6 +1,6 @@
 import axios from 'axios'
 // assigning baseUrl the value of the backend server address
-const baseUrl = 'http://localhost:3001/api/persons'
+const baseUrl = '/api/persons'
 
 const create = (newPerson) => {return axios.post(baseUrl, newPerson)}
 
