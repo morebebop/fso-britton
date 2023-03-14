@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 
 // checks that a password is passed
 if (process.argv.length < 3) {
-    console.log('give password as argument')
-    process.exit(1)
+  console.log('give password as argument')
+  process.exit(1)
 }
 
 // uses the password variable to complete url for database
@@ -42,6 +42,6 @@ const person = new Person({
 
 // saves and closes the database
 person.save().then(result => {
-    console.log('person saved!')
-    mongoose.connection.close()
+  console.log('person saved!')
+  mongoose.connection.close()
 })
